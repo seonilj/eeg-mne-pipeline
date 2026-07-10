@@ -1,1 +1,27 @@
+# ==========================================
+# Production-Ready Data Management Standard for EEG Projects
+# 뇌파(EEG) 프로젝트 실전 데이터 관리 표준
+# ==========================================
+
+# 1. Isolate Bio-Signal Data Directories & Heavy Formats (Critical)
 data/
+*.edf
+*.bdf
+*.fif
+*.set
+*.fdt
+
+# 2. Exclude Python Execution & Jupyter Notebook Cache Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+.virtualenvs/
+venv/
+.env
+
+# 3. Exclude OS-Specific & IDE Temporary System Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
