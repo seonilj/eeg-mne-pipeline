@@ -100,7 +100,6 @@ https://physionet.org/
 
 ```text
 eeg-mne-pipeline/
-
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
@@ -112,7 +111,10 @@ eeg-mne-pipeline/
 │   └── sensor_topomap.png
 │
 ├── notebooks/
-│   └── 01_eeg_loading_visualization.ipynb
+│   └── 01_eeg_loading_visualization.ipynb  # Step 1 - 5
+│   └── 02_eeg_signal_enhancement.ipynb     # Step 6 - 7
+│   └── 03_eeg_epoching_features.ipynb      # (coming soon: 향후 데이터 자르기 단계)
+│   └── 04_mi_machine_learning.ipynb        # (coming soon: 향후 머신러닝 분류 단계)
 │
 └── src/
 ```
@@ -122,62 +124,54 @@ eeg-mne-pipeline/
 # Workflow
 
 ### 🇬🇧 English
-
-1. Load raw EEG recordings
-2. Inspect metadata
-3. Standardize channel names
-4. Apply standard_1005 montage
-5. Visualize electrode positions
-6. Inspect raw EEG waveforms
+1. **Data Ingestion**: Load raw PhysioNet EEG recordings and inspect system metadata.
+2. **Data Cleansing**: Standardize electrode string names and co-register the international `standard_1005` montage.
+3. **Exploratory Visualization**: Render and verify the initial 2D sensor topography map and raw waveforms.
+4. **Signal Enhancement**: Apply a 60Hz Notch filter to suppress power-line noise and a 1–40Hz Band-pass filter to isolate core Motor Imagery (Mu/Beta) rhythms.
 
 ### 🇰🇷 한국어
-
-1. 원시 EEG 데이터 로드
-2. 메타데이터 확인
-3. 채널 이름 표준화
-4. standard_1005 좌표계 적용
-5. 전극 위치 시각화
-6. 원시 EEG 파형 확인
+1. **데이터 로드**: 원시 PhysioNet EEG 녹음 데이터를 불러오고 시스템 메타데이터를 확인합니다.
+2. **데이터 정제**: 전극 이름 문자열을 표준화하고 국제 표준 `standard_1005` 좌표계를 매핑합니다.
+3. **탐색적 시각화**: 초기 2D 센서 지형도와 원시 뇌파 파형을 렌더링하고 시각적으로 검증합니다.
+4. **신호 품질 강화**: 60Hz 노치 필터로 교류 전기 잡음을 제거하고, 1~40Hz 밴드패스 필터로 핵심 운동 상상 주파수(Mu/Beta 리듬) 영역만 깎아냅니다.
 
 ---
 
 # Results
 
-*(IMAGE)*
+### 1. Continuous Time-Series EEG Signal
+Below is the visual profile of the raw voltage fluctuations across the top 5 EEG channels during the first 5 seconds.
+![Raw EEG Time-Series Signal](./figures/raw_eeg.png)
+
+### 2. 64-Channel Sensor Topography Map
+Below is the 2D spatial coordinate mapping of the 64-channel electrode matrix, perfectly co-registered over the motor cortex.
+![64-Channel EEG Sensor Topomap](./figures/sensor_topomap.png)
 
 ### 🇬🇧 English
-
-The EEG channels were successfully mapped onto the international standard_1005 electrode system, providing an anatomically meaningful spatial representation for future signal processing.
+The high-dimensional biological time-series data was standardized and anatomically mapped. By engineering targeted mathematical filters(Notch & Band-pass), power-line electrical Hums and physiological noise were stripped away, creating a clean, high-SNR input baseline for future machine learning steps.
 
 ### 🇰🇷 한국어
-
-EEG 채널을 국제 표준 standard_1005 전극 좌표계에 성공적으로 매핑하여 향후 신호처리 및 머신러닝 분석을 위한 공간 정보를 구축했습니다.
+고차원 생체 시계열 데이터의 표준화와 해부학적 매핑을 했습니다. 또한 목적에 맞는 수학적 필터(노치 및 밴드패스) 엔지니어링을 통해 전력선 전기 잡음과 신체 노이즈를 깎아냄으로써 향후 머신러닝 분석을 위해 정제되고 신호 대 잡음비(SNR)가 높은 기초 데이터를 확보했습니다.
 
 ---
 
 # What I Learned
 
 ### 🇬🇧 English
+Through this hands-on engineering pipeline, I have built a concrete foundation in:
+- **Matrix Metadata Handling**: Understanding how raw voltage potentials convert into programmable memory formats (`preload=True`).
+- **Anatomical Space Co-registration**: Learning why assigning spatial coordinates is non-negotiable for biological data before feeding it to an AI.
+- **Digital Noise Cleansing**: Understanding how physical environmental interferences (60Hz hum) and muscle movements affect signal integrity, and how to neutralize them mathematically.
 
-This project helped me understand:
-
-- the structure of EEG recordings
-- channel naming conventions
-- electrode montages
-- why preprocessing is essential before machine learning
-
-It also strengthened my understanding of how computational neuroscience workflows begin from raw biomedical data(rather than from AI models).
+This project reinforces my belief that high-quality biomedical data analytics always begins with defensive data engineering and strict preprocessing, rather than jumps directly into complex AI models.
 
 ### 🇰🇷 한국어
+이번 파이프라인 구축 과정을 통해 다음 영역에서 탄탄한 기초 체력을 다질 수 있었습니다.
+- **행렬 메타데이터 핸들링**: 날것의 전압 신호가 어떻게 프로그래밍 가능한 메모리 포맷으로 로드(`preload=True`)되는지 이해했습니다.
+- **해부학적 공간 좌표 매핑**: 생체 신호를 인공지능에 먹이기 전에 왜 공간 좌표계를 부여하는 작업이 타협 불가능한 필수 단계인지 배웠습니다.
+- **디지털 노이즈 정제**: 물리적인 환경 간섭(60Hz 콘센트 잡음)과 신체 움직임이 신호에 미치는 영향을 이해하고, 이를 수학적으로 중립화하는 방법을 익혔습니다.
 
-이번 프로젝트를 통해
-
-- EEG 데이터 구조
-- 채널 명명 규칙
-- 전극 좌표계(Montage)
-- 머신러닝 이전 전처리의 중요성
-
-을 이해할 수 있었으며, 계산신경과학 프로젝트는 AI 모델보다 데이터 구조를 이해하는 것부터 시작된다는 점을 배웠습니다.
+화려하고 복잡한 AI 모델을 무작정 돌리기 전에, 방어적인 데이터 엔지니어링과 정석적인 전처리를 완수하는 것이 바이오메디컬 데이터 분석의 진짜 시작이라는 점을 깊이 깨달았습니다.
 
 ---
 
